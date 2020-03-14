@@ -1,0 +1,65 @@
+version: "3.7"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    networks:
+      internal:
+        ipv4_address: 10.5.0.2
+    environment:
+      TZ: Europe/Vienna
+      WEBPASSWORD: ' changeme'
+      PROXY_LOCATION: pihole
+      DNS1: 10.5.0.3#5053
+      DNS2: 'no' # default is google DNS
+    volumes:
+       - etc:/etc/pihole/
+       - dnsmasq:/etc/dnsmasq.d/
+       - $(pwd)/00-additional.conf:/etc/dnsmasq.d/00-additional.conf #custom dnsmasq config
+    # run `touch ./var-log/pihole.log` first unless you like errors
+    # - './var-log/pihole.log:/var/log/pihole.log'
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+
+  cloudflared:
+    image: crazymax/cloudflared:latest
+    container_name: cloudflared
+    ports:
+      - target: 5053
+        published: 5053
+        protocol: udp
+      - target: 49312
+        published: 49312
+        protocol: tcp
+    environment:
+      - "TZ=Europe/Vienna"
+      - "TUNNEL_DNS_UPSTREAM=https://1.1.1.1/dns-query,https://1.0.0.1/dns-query"
+    networks:
+      internal:
+        ipv4_address: 10.5.0.3
+    restart: always
+
+volumes:
+  etc:
+    driver: local
+  dnsmasq:
+    driver: local
+
+networks:
+  internal:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24
