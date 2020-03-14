@@ -21,7 +21,7 @@ services:
     volumes:
        - etc:/etc/pihole/
        - dnsmasq:/etc/dnsmasq.d/
-       - $(pwd)/00-additional.conf:/etc/dnsmasq.d/00-additional.conf #custom dnsmasq config
+       - ./00-additional.conf:/etc/dnsmasq.d/00-additional.conf #custom dnsmasq config
     # run `touch ./var-log/pihole.log` first unless you like errors
     # - './var-log/pihole.log:/var/log/pihole.log'
     dns:
