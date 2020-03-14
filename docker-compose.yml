@@ -15,8 +15,7 @@ services:
         ipv4_address: 10.5.0.2
     environment:
       TZ: Europe/Vienna
-      WEBPASSWORD: ' changeme'
-      PROXY_LOCATION: pihole
+      # WEBPASSWORD: 'set a secure password here or it will be random'
       DNS1: 10.5.0.3#5053
       DNS2: 'no' # default is google DNS
     volumes:

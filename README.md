@@ -85,6 +85,41 @@ git clone https://github.com/brunnerklaus/docker-pihole.git ~/docker-pihole
 cd ~/docker-pihole
 ```
 
+## Quick Start
+Run Pihole standalone
+[Docker-compose](https://docs.docker.com/compose/install/) example:
+
+```yaml
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: Europe/Vienna
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
+    volumes:
+       - etc:/etc/pihole/
+       - dnsmasq:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+```
+
 Before starting edit the docker-compose file and set
 ```yml
 TZ: Europe/Vienna
@@ -94,7 +129,7 @@ to your need.
 
 ## Usage
 
-Docker compose is the recommended way to run this image. You can use the following docker-compose file, then run the container:
+Docker compose is the recommended way to run this image. You can use the following docker-compose file, then run all containers:
 
 ```bash
 docker-compose up -d
