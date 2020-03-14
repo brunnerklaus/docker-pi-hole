@@ -123,7 +123,7 @@ services:
 Before starting edit the docker-compose file and set
 ```yml
 TZ: Europe/Vienna
-WEBPASSWORD: ' changeme'
+WEBPASSWORD: 'changeme'
 ```
 to your need.
 
