@@ -153,6 +153,21 @@ docker-compose up -d
 docker exec cloudflared cloudflared --version
 ```
 
+### Check TLS traffic for DNS requests
+```bash
+sudo apt install tshark
+```
+Capture traffic on port 443
+```bash
+sudo tshark -f 'tcp port 443'
+Capturing on 'eth0'
+    1 0.000000000  127.0.0.1 → 1.1.1.1    TLSv1.2 92 Application Data
+    2 0.000486927  127.0.0.1 → 1.1.1.1    TLSv1.2 121 Application Data
+    3 0.010827079    1.1.1.1 → 127.0.0.1  TCP 60 443 → 44498 [ACK] Seq=1 Ack=106 Win=67 Len=0
+    4 0.011915568    1.1.1.1 → 127.0.0.1  TLSv1.2 408 Application Data
+    5 0.011917859    1.1.1.1 → 127.0.0.1  TLSv1.2 85 Application Data
+```
+
 ## How can I help ?
 
 All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:
