@@ -1,5 +1,7 @@
 version: "3.7"
 
+# https://github.com/pi-hole/docker-pi-hole/blob/master/README.md
+
 services:
   pihole:
     container_name: pihole
@@ -15,9 +17,12 @@ services:
         ipv4_address: 10.5.0.2
     environment:
       TZ: Europe/Vienna
-      # WEBPASSWORD: 'set a secure password here or it will be random'
-      DNS1: 10.5.0.3#5053
-      DNS2: 'no' # default is google DNS
+      WEBPASSWORD: ${PIHOLE_WEBPASSWORD} #set a secure password here or it will be random
+      PROXY_LOCATION: pihole
+      VIRTUAL_HOST: pihole.local
+      VIRTUAL_PORT=: 80
+      DNS1: ${PIHOLE_DNS1:-1.1.1.1}
+      DNS2: ${PIHOLE_DNS2:-8.8.8.8} # default is google DNS
     volumes:
        - etc:/etc/pihole/
        - dnsmasq:/etc/dnsmasq.d/
