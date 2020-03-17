@@ -1,5 +1,6 @@
 docker-pihole
 ========
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This project runs [Pihole](https://github.com/pi-hole/pi-hole) and [cloudflared](https://github.com/crazy-max/docker-cloudflared) as docker containers.
 
@@ -176,4 +177,5 @@ Thanks again for your support, it is much appreciated! :pray:
 
 ## License
 
-MIT. See `LICENSE` for more details.
+See [LICENSE](LICENSE) for the complete license.
+[badge-license]: https://img.shields.io/badge/license-Apache2-green.svg?style=flat
