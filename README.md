@@ -82,8 +82,18 @@ Voilà, you can now use Portainer by accessing the port 9000 on the server where
 
 ## Clone the repo
 ```bash
-git clone https://github.com/brunnerklaus/docker-pihole.git ~/docker-pihole
-cd ~/docker-pihole
+git clone https://github.com/brunnerklaus/docker-pihole.git ~/docker-pi-hole
+cd ~/docker-pi-hole
+```
+
+## Set Crendentials and DNS
+```bash
+cp .env.example .env
+```
+```yml
+PIHOLE_WEBPASSWORD=changeme
+PIHOLE_DNS1=10.5.0.3#5053
+PIHOLE_DNS2=no
 ```
 
 ## Quick Start
