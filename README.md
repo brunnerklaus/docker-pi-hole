@@ -11,17 +11,66 @@ This project runs [Pihole](https://github.com/pi-hole/pi-hole) and [cloudflared]
 - **DNS-Over-HTTPS** is a protocol for performing DNS lookups securly via HTTPS. (If you are not aware of what DNS is, please read this [primer](https://developers.cloudflare.com/1.1.1.1/dns-over-tls/) before continuing).
 
 
+## Install raspbian
+Download [Raspberry Pi Imager](https://www.raspberrypi.org/downloads/https://www.raspberrypi.org/downloads/) and install it on your SDCard
+
+### Enable SSH
+Mount `boot` partition of the the SD-Card and create `/boot/ssh.txt` file to enable SSH after installing raspbian.
+```bash
+cd /Volumes/boot
+touch ssh.txt
+```
 
 ## Update system packages
 ```bash
-sudo apt update && sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y vim screen pydf git dnsutils
+```
+
+## Diable IPv6
+dd this loine in `/etc/sysctl.conf`
+```bash
+net.ipv6.conf.all.disable_ipv6 = 1
+```
+
+For the change to take effect without rebooting:
+```bash
+sudo sysctl -p
+```
+Verify that IPv6 address does not show up in ifconfig.
+
+## Install zsh
+```bash
+sudo apt install -y zsh
+wget -O .zshrc https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+chsh -s /bin/zsh
 ```
 
 ## Disable swapping
 Take care of the SD card :rocket:
 ```bash
-sudo swapoff --all
+sudo dphys-swapfile swapoff
+udo systemctl disable dphys-swapfile.service
 ```
+
+## Set static IP
+For a static IP address on an Ethernet connection edit `/etc/dhcpcd.conf`
+
+Type in the following lines on the top of the file:
+
+```bash
+interface eth0
+static ip_address=192.168.1.XX/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1 1.1.1.1
+```
+
+```bash
+sudo reboot
+```
+
+## Set locale
+`en_US.UTF-8` via `raspi-config`
 
 ## Log2ram
 Usefull for RaspberryPi for not writing on the SD card all the time. You need it because your SD card doesn't want to suffer anymore! See [log2ram](https://github.com/azlux/log2ram) project for more information.
@@ -30,10 +79,14 @@ Usefull for RaspberryPi for not writing on the SD card all the time. You need it
 echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
 wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
 sudo apt update
-sudo apt install log2ram
+sudo apt install -y log2ram
 ```
 
-Modify /etc/log2ram.conf
+Modify `/etc/log2ram.conf`and configure size for the RAM foldeer
+
+```bash
+sudo vim /etc/log2ram.conf
+```
 ```
 SIZE=128M
 ```
@@ -56,6 +109,12 @@ log2ram on /var/log type tmpfs (rw,nosuid,nodev,noexec,relatime,size=131072k,mod
 See https://github.com/docker/docker-install 🐳 for more information
 ```bash
 curl -sSL https://get.docker.com | sh
+```
+If you would like to use Docker as a non-root user, you should now consider
+adding your user to the "docker" group with something like:
+Remember that you will have to log out and back in for this to take effect!
+```bash
+sudo usermod -aG docker pi
 ```
 
 ### Install required packages
