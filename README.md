@@ -106,9 +106,9 @@ log2ram on /var/log type tmpfs (rw,nosuid,nodev,noexec,relatime,size=131072k,mod
 ```
 
 ## Install docker
-See https://github.com/docker/docker-install 🐳 for more information
+See [Docker-install](https://github.com/docker/docker-install) 🐳 for more information
 ```bash
-curl -sSL https://get.docker.com | sh
+curl -sSL https://get.docker.com/ | CHANNEL=stable sh
 ```
 If you would like to use Docker as a non-root user, you should now consider
 adding your user to the "docker" group with something like:
@@ -117,17 +117,11 @@ Remember that you will have to log out and back in for this to take effect!
 sudo usermod -aG docker pi
 ```
 
-### Install required packages
-```bash
-sudo apt update
-sudo apt install -y python3-pip libffi-dev
-```
-
-### Install Docker Compose from pip (using Python3)
-This might take a while
+## Install Docker Compose
 
 ```bash
-sudo pip3 install docker-compose
+curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://www.servercow.de/docker-compose/latest.php)/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 ```
 
 ## Install Portainer
